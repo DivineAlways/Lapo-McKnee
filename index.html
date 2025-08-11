@@ -1,0 +1,1028 @@
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nightlife Connect - Mobile App Prototype</title>
+    <style>
+        /*
+        * Global Styles for Nightlife Connect Prototype
+        * Designed for mobile responsiveness with a dark theme and neon accents.
+        */
+        body {
+            font-family: 'Arial', sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #1a011d; /* Dark theme base */
+            color: #e0e0e0; /* Light text color */
+            line-height: 1.6;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            overflow-x: hidden; /* Prevent horizontal scroll */
+        }
+
+        /* Container for each page's content */
+        .container {
+            max-width: 90%;
+            margin: 20px auto;
+            padding: 20px;
+            background-color: #2b022f; /* Slightly lighter dark for content areas */
+            border-radius: 10px;
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.5);
+            flex-grow: 1;
+            display: flex; /* Use flexbox for inner layout */
+            flex-direction: column;
+        }
+
+        /* Headings */
+        h1, h2, h3 {
+            color: #ff00ff; /* Neon Pink for headings */
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        /* Buttons and Links styled as buttons */
+        button, .button-link, .nav-button {
+            display: block;
+            width: 100%;
+            padding: 12px 15px;
+            margin-bottom: 10px;
+            background-color: #8a2be2; /* Neon Purple */
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1em;
+            text-align: center;
+            text-decoration: none;
+            transition: background-color 0.3s ease;
+        }
+
+        button:hover, .button-link:hover, .nav-button:hover {
+            background-color: #a052ee; /* Lighter purple on hover */
+        }
+
+        /* Form Inputs */
+        input[type="text"],
+        input[type="email"],
+        input[type="password"],
+        textarea,
+        select {
+            width: calc(100% - 20px); /* Account for padding */
+            padding: 10px;
+            margin-bottom: 15px;
+            border: 1px solid #5a0362; /* Darker border */
+            border-radius: 5px;
+            background-color: #3f0345; /* Dark input background */
+            color: #e0e0e0;
+            box-sizing: border-box; /* Include padding in width */
+        }
+
+        input[type="range"] {
+            width: 100%;
+            margin-bottom: 15px;
+            -webkit-appearance: none; /* Override default appearance */
+            height: 8px;
+            border-radius: 5px;
+            background: #5a0362;
+            outline: none;
+            transition: opacity .2s;
+        }
+
+        input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: #00ffff; /* Neon Cyan thumb */
+            cursor: pointer;
+        }
+
+        input[type="range"]::-moz-range-thumb {
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: #00ffff;
+            cursor: pointer;
+        }
+
+        /* Labels */
+        label {
+            display: block;
+            margin-bottom: 5px;
+            color: #c900c9; /* Lighter neon pink for labels */
+        }
+
+        /* General Links */
+        a {
+            color: #00ffff; /* Neon Cyan for links */
+            text-decoration: none;
+        }
+
+        a:hover {
+            text-decoration: underline;
+        }
+
+        /* Navigation Bar (fixed at bottom) */
+        .navbar {
+            display: flex;
+            justify-content: space-around;
+            background-color: #1a011d;
+            padding: 10px 0;
+            border-top: 1px solid #5a0362;
+            position: fixed; /* Fixed position */
+            bottom: 0;
+            width: 100%;
+            z-index: 1000;
+            box-shadow: 0 -5px 15px rgba(0, 0, 0, 0.3);
+        }
+
+        .navbar a {
+            flex: 1;
+            text-align: center;
+            padding: 10px 5px;
+            color: #c0c0c0; /* Muted white for nav items */
+            font-size: 0.8em;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-decoration: none;
+        }
+
+        .navbar a.active-nav {
+            color: #00ffff; /* Neon Cyan for active nav item */
+            font-weight: bold;
+        }
+
+        .navbar a:hover {
+            color: #00ffff;
+            background-color: #3f0345;
+            border-radius: 5px;
+        }
+
+        /* Page visibility management for SPA */
+        .page {
+            display: none; /* Hidden by default */
+            min-height: calc(100vh - 70px); /* Adjust for nav bar height */
+            padding-bottom: 70px; /* Space for fixed nav bar */
+        }
+        .page.active {
+            display: flex; /* Show the active page */
+            flex-direction: column;
+        }
+
+        /* Specific Component Styles */
+
+        /* Card styles for profiles, restaurants, events, chats */
+        .profile-card, .restaurant-card, .event-card, .chat-thread {
+            background-color: #3f0345; /* Darker background for cards */
+            padding: 15px;
+            margin-bottom: 15px;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+            text-align: center;
+        }
+        .profile-card img {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            object-fit: cover;
+            margin-bottom: 10px;
+            border: 2px solid #00ffff;
+        }
+        .profile-card h3, .restaurant-card h3, .event-card h3 {
+            margin-top: 0;
+            color: #00ffff;
+        }
+        .card-actions {
+            display: flex;
+            justify-content: space-around;
+            margin-top: 15px;
+            gap: 10px;
+        }
+        .card-actions button {
+            flex: 1;
+            margin-bottom: 0;
+            padding: 10px;
+        }
+
+        /* Map Placeholder */
+        .map-placeholder {
+            background-color: #0d0010; /* Even darker for map area */
+            border: 1px solid #5a0362;
+            height: 300px;
+            width: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #8a2be2;
+            font-size: 1.2em;
+            margin-bottom: 20px;
+            border-radius: 8px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+        .map-placeholder::before {
+            content: '🗺️ Map View Placeholder';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+
+        /* Chat Specific Styles */
+        #chat-threads-view, #single-chat-view {
+            display: none;
+        }
+        #chat-threads-view.active, #single-chat-view.active {
+            display: block;
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+        }
+        .chat-messages {
+            background-color: #0d0010;
+            border-radius: 8px;
+            padding: 10px;
+            max-height: 400px;
+            overflow-y: auto;
+            margin-bottom: 15px;
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+        }
+        .message {
+            margin-bottom: 10px;
+            padding: 8px 12px;
+            border-radius: 15px;
+            max-width: 80%;
+            word-wrap: break-word; /* Ensure long words break */
+        }
+        .message.sent {
+            background-color: #8a2be2; /* Neon purple for sent messages */
+            align-self: flex-end;
+            margin-left: auto;
+        }
+        .message.received {
+            background-color: #5a0362; /* Darker purple for received messages */
+            align-self: flex-start;
+            margin-right: auto;
+        }
+        .chat-input {
+            display: flex;
+            gap: 10px;
+            margin-top: auto; /* Push input to bottom of chat view */
+        }
+        .chat-input input {
+            flex-grow: 1;
+            margin-bottom: 0; /* Override default input margin */
+        }
+        .chat-input button {
+            width: auto;
+            min-width: unset;
+            margin-bottom: 0;
+            padding: 10px 15px;
+        }
+
+        /* Profile Edit Mode */
+        #profile-display, #profile-edit {
+            display: none;
+        }
+        #profile-display.active, #profile-edit.active {
+            display: block;
+        }
+
+        /* Toggle Switch for settings */
+        .toggle-switch {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 15px;
+            padding: 10px 0;
+            border-bottom: 1px solid #3f0345;
+        }
+        .toggle-switch:last-of-type {
+            border-bottom: none;
+        }
+        .toggle-switch input[type="checkbox"] {
+            display: none; /* Hide default checkbox */
+        }
+        .toggle-switch .slider {
+            width: 40px;
+            height: 20px;
+            background-color: #ccc;
+            border-radius: 20px;
+            position: relative;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            flex-shrink: 0; /* Prevent slider from shrinking */
+        }
+        .toggle-switch .slider:before {
+            content: "";
+            position: absolute;
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            background-color: white;
+            top: 2px;
+            left: 2px;
+            transition: transform 0.3s;
+        }
+        .toggle-switch input[type="checkbox"]:checked + .slider {
+            background-color: #00ffff; /* Neon Cyan when checked */
+        }
+        .toggle-switch input[type="checkbox"]:checked + .slider:before {
+            transform: translateX(20px);
+        }
+
+        /* Responsive adjustments */
+        @media (min-width: 768px) {
+            .container {
+                max-width: 700px;
+                padding: 30px;
+            }
+            button, .button-link, .nav-button {
+                width: auto;
+                min-width: 200px;
+                margin-left: auto;
+                margin-right: auto;
+            }
+            .navbar {
+                justify-content: center;
+                padding: 15px 0;
+            }
+            .navbar a {
+                padding: 10px 20px;
+                font-size: 1em;
+            }
+            .chat-messages {
+                max-height: 500px; /* Taller chat on larger screens */
+            }
+            .card-actions {
+                justify-content: center;
+            }
+        }
+
+        @media (min-width: 1024px) {
+            .container {
+                max-width: 800px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Main Application Container -->
+    <div id="app-container">
+
+        <!--
+        * HOME / INDEX PAGE
+        * Initial screen, introduction and navigation to main features.
+        -->
+        <div id="home-page" class="page active container">
+            <h1>Welcome to Nightlife Connect!</h1>
+            <p style="text-align: center; color: #c900c9;">
+                The ultimate app for nightlife people like you, Lapo McKnee.
+                Connect with locals, discover amazing restaurants, and find or create the hottest parties!
+            </p>
+
+            <section class="home-navigation" style="margin-top: 30px;">
+                <h2 style="font-size: 1.5em; margin-bottom: 25px;">Ready to Explore?</h2>
+                <a href="#" class="button-link" data-page="login-signup-page">Login / Sign Up</a>
+                <a href="#" class="button-link" data-page="dashboard-page">Explore Dashboard (Demo)</a>
+                <a href="#" class="button-link" data-page="people-page">Meet People (Demo)</a>
+                <a href="#" class="button-link" data-page="restaurants-page">Find Restaurants (Demo)</a>
+                <a href="#" class="button-link" data-page="events-page">Check Events (Demo)</a>
+            </section>
+
+            <!-- Documentation Link -->
+            <footer style="text-align: center; margin-top: 40px; font-size: 0.8em; color: #8a2be2;">
+                <p>
+                    <a href="https://example.com/project-documentation" target="_blank" style="color: #8a2be2;">
+                        View Project Documentation (Placeholder)
+                    </a>
+                </p>
+            </footer>
+        </div>
+
+        <!--
+        * LOGIN / SIGN-UP PAGE
+        * User authentication form.
+        -->
+        <div id="login-signup-page" class="page container">
+            <h1>Join the Nightlife!</h1>
+
+            <!-- Login Form Section -->
+            <section id="login-section" style="margin-bottom: 30px;">
+                <h2>Login</h2>
+                <form onsubmit="alert('Login functionality not implemented in prototype.'); return false;">
+                    <label for="login-email">Email:</label>
+                    <input type="email" id="login-email" name="email" placeholder="testing-gmail26@aol.com" required>
+
+                    <label for="login-password">Password:</label>
+                    <input type="password" id="login-password" name="password" placeholder="********" required>
+
+                    <button type="submit">Log In</button>
+                </form>
+                <p style="text-align: center; margin-top: 15px;">
+                    <a href="#" style="color: #00ffff;">Forgot Password?</a>
+                </p>
+                <p style="text-align: center; margin-top: 20px;">
+                    Don't have an account? <a href="#" onclick="showSection('signup-section'); hideSection('login-section');" style="color: #00ffff;">Sign Up</a>
+                </p>
+            </section>
+
+            <!-- Sign Up Form Section -->
+            <section id="signup-section" style="display: none;">
+                <h2>Sign Up</h2>
+                <form onsubmit="alert('Sign Up functionality not implemented in prototype.'); return false;">
+                    <label for="signup-name">Full Name:</label>
+                    <input type="text" id="signup-name" name="name" placeholder="Lapo McKnee" required>
+
+                    <label for="signup-email">Email:</label>
+                    <input type="email" id="signup-email" name="email" placeholder="testing-gmail26@aol.com" required>
+
+                    <label for="signup-password">Password:</label>
+                    <input type="password" id="signup-password" name="password" placeholder="********" required>
+
+                    <label for="signup-confirm-password">Confirm Password:</label>
+                    <input type="password" id="signup-confirm-password" name="confirm_password" placeholder="********" required>
+
+                    <button type="submit">Sign Up</button>
+                </form>
+                <p style="text-align: center; margin-top: 20px;">
+                    Already have an account? <a href="#" onclick="showSection('login-section'); hideSection('signup-section');" style="color: #00ffff;">Login</a>
+                </p>
+            </section>
+        </div>
+
+        <!--
+        * DASHBOARD PAGE
+        * Main discovery hub with map view.
+        -->
+        <div id="dashboard-page" class="page container">
+            <h1>Discover Nightlife Near You</h1>
+
+            <!-- Map Placeholder Section -->
+            <section class="map-section">
+                <div class="map-placeholder">
+                    Interactive Map showing Users and Restaurants
+                    <br>(Placeholder)
+                </div>
+            </section>
+
+            <!-- Quick Actions Section -->
+            <section class="quick-actions">
+                <h2 style="font-size: 1.4em;">Quick Actions</h2>
+                <a href="#" class="button-link" data-page="people-page">Find People Nearby</a>
+                <a href="#" class="button-link" data-page="restaurants-page">Explore Restaurants</a>
+                <a href="#" class="button-link" data-page="events-page">Create/Join Events</a>
+            </section>
+        </div>
+
+        <!--
+        * PEOPLE DISCOVERY PAGE
+        * Card-based interface for meeting local people.
+        -->
+        <div id="people-page" class="page container">
+            <h1>Meet Local People</h1>
+
+            <!-- Filters Section -->
+            <section class="filters-section" style="margin-bottom: 20px;">
+                <h2 style="font-size: 1.3em;">Filters</h2>
+                <label for="age-range">Age Range:</label>
+                <input type="range" id="age-range" min="18" max="60" value="30">
+                <span id="age-range-value" style="display: block; text-align: right; color: #c0c0c0;">18 - 60</span>
+
+                <label for="interests">Interests:</label>
+                <input type="text" id="interests" placeholder="e.g., Music, Food, Dancing">
+
+                <label for="gender">Looking for:</label>
+                <select id="gender">
+                    <option value="any">Any</option>
+                    <option value="male">Males</option>
+                    <option value="female">Females</option>
+                    <option value="other">Other</option>
+                </select>
+                <button onclick="alert('Applying filters...');">Apply Filters</button>
+            </section>
+
+            <!-- People Cards Section -->
+            <section class="people-cards" style="flex-grow: 1; display: flex; flex-direction: column; justify-content: center;">
+                <h2 style="font-size: 1.4em;">Discover Profiles</h2>
+                <div class="profile-card" style="margin-bottom: 20px;">
+                    <img src="https://via.placeholder.com/100/FF00FF/000000?text=P" alt="Profile Picture">
+                    <h3>Alice, 28</h3>
+                    <p style="color: #c0c0c0;">Loves live music, trying new cuisines, and spontaneous adventures.</p>
+                    <div class="card-actions">
+                        <button style="background-color: #ff00ff;">Like</button>
+                        <button style="background-color: #5a0362;">Skip</button>
+                    </div>
+                </div>
+                <div class="profile-card">
+                    <img src="https://via.placeholder.com/100/00FFFF/000000?text=P" alt="Profile Picture">
+                    <h3>Bob, 32</h3>
+                    <p style="color: #c0c0c0;">Passionate about craft beers and finding the best local bars.</p>
+                    <div class="card-actions">
+                        <button style="background-color: #ff00ff;">Like</button>
+                        <button style="background-color: #5a0362;">Skip</button>
+                    </div>
+                </div>
+                <p style="text-align: center; margin-top: 20px; font-size: 0.9em; color: #8a2be2;">
+                    (Simulated swipe/tap gesture with buttons)
+                </p>
+            </section>
+        </div>
+
+        <!--
+        * RESTAURANT FINDER PAGE
+        * Discover and filter local restaurants.
+        -->
+        <div id="restaurants-page" class="page container">
+            <h1>Find Delicious Eats</h1>
+
+            <!-- Search and Filters Section -->
+            <section class="search-filters" style="margin-bottom: 20px;">
+                <h2 style="font-size: 1.3em;">Search & Filters</h2>
+                <input type="text" placeholder="Search by name or cuisine..." style="margin-bottom: 15px;">
+
+                <label for="cuisine-filter">Cuisine:</label>
+                <select id="cuisine-filter">
+                    <option value="any">Any</option>
+                    <option value="italian">Italian</option>
+                    <option value="mexican">Mexican</option>
+                    <option value="asian">Asian</option>
+                    <option value="american">American</option>
+                </select>
+
+                <label for="price-filter">Price Range:</label>
+                <select id="price-filter">
+                    <option value="any">Any</option>
+                    <option value="$">$</option>
+                    <option value="$$">$$</option>
+                    <option value="$$$">$$$</option>
+                </select>
+
+                <label for="rating-filter">Min Rating:</label>
+                <input type="range" id="rating-filter" min="1" max="5" value="3">
+                <span id="rating-filter-value" style="display: block; text-align: right; color: #c0c0c0;">3 Stars & Up</span>
+
+                <button onclick="alert('Applying restaurant filters...');">Apply Filters</button>
+            </section>
+
+            <!-- Restaurant List Section -->
+            <section class="restaurant-list" style="flex-grow: 1;">
+                <h2 style="font-size: 1.4em;">Top Picks Near You</h2>
+                <div class="restaurant-card">
+                    <h3>The Neon Noodle</h3>
+                    <p style="color: #c0c0c0;">Cuisine: Asian Fusion | Rating: ★★★★☆ | Price: $$</p>
+                    <p style="color: #c0c0c0;">About 1.2 miles away. Great for late-night bites!</p>
+                    <div class="card-actions">
+                        <button onclick="alert('Booking table for The Neon Noodle...');">Book Table</button>
+                        <button onclick="alert('Viewing The Neon Noodle details...');">View Details</button>
+                    </div>
+                </div>
+                <div class="restaurant-card">
+                    <h3>Purple Pizzaria</h3>
+                    <p style="color: #c0c0c0;">Cuisine: Italian | Rating: ★★★☆☆ | Price: $</p>
+                    <p style="color: #c0c0c0;">About 0.5 miles away. Casual spot with vibrant atmosphere.</p>
+                    <div class="card-actions">
+                        <button onclick="alert('Booking table for Purple Pizzaria...');">Book Table</button>
+                        <button onclick="alert('Viewing Purple Pizzaria details...');">View Details</button>
+                    </div>
+                </div>
+            </section>
+        </div>
+
+        <!--
+        * CHAT / MESSAGES PAGE
+        * Real-time messaging interface.
+        -->
+        <div id="chat-page" class="page container">
+            <h1>Your Messages</h1>
+
+            <!-- Chat Threads View -->
+            <section id="chat-threads-view" class="active">
+                <h2>Conversations</h2>
+                <div class="chat-thread" onclick="showSingleChat('Alice');">
+                    <h3>Alice</h3>
+                    <p style="color: #c0c0c0;">Last message: "Hey, are you free this weekend?" <span style="font-size: 0.8em; color: #8a2be2;">(2m ago)</span></p>
+                </div>
+                <div class="chat-thread" onclick="showSingleChat('Bob');">
+                    <h3>Bob</h3>
+                    <p style="color: #c0c0c0;">Last message: "Sure, let's meet at the new lounge." <span style="font-size: 0.8em; color: #8a2be2;">(1h ago)</span></p>
+                </div>
+                <div class="chat-thread" onclick="showSingleChat('Event Group');">
+                    <h3>Event Group: Friday Night Bash</h3>
+                    <p style="color: #c0c0c0;">Last message: "Don't forget the dress code!" <span style="font-size: 0.8em; color: #8a2be2;">(Yesterday)</span></p>
+                </div>
+            </section>
+
+            <!-- Single Chat View (initially hidden) -->
+            <section id="single-chat-view" style="flex-grow: 1; display: flex; flex-direction: column;">
+                <button onclick="hideSingleChat()" style="margin-bottom: 15px; background-color: #5a0362; width: auto; align-self: flex-start; min-width: unset; padding: 8px 12px;">← Back to Threads</button>
+                <h2 id="chat-partner-name"></h2>
+
+                <div class="chat-messages" id="message-list">
+                    <div class="message received">Hey Lapo, how's your night?</div>
+                    <div class="message sent">Pretty good! Just checking out new spots.</div>
+                    <div class="message received">Cool! I heard about a new place with great live music.</div>
+                    <div class="message sent">Oh really? Tell me more!</div>
+                </div>
+
+                <div class="chat-input">
+                    <input type="text" id="chat-message-input" placeholder="Type a message...">
+                    <button onclick="sendMessage()">Send</button>
+                </div>
+            </section>
+        </div>
+
+        <!--
+        * EVENTS PAGE
+        * Create or join nightlife events.
+        -->
+        <div id="events-page" class="page container">
+            <h1>Nightlife Events</h1>
+
+            <!-- Create Event Section -->
+            <section id="create-event-section" style="margin-bottom: 30px;">
+                <h2 style="font-size: 1.3em;">Create a New Event</h2>
+                <form onsubmit="alert('Event created!'); return false;">
+                    <label for="event-name">Event Name:</label>
+                    <input type="text" id="event-name" placeholder="E.g., Friday Night Dance Party" required>
+
+                    <label for="event-date">Date:</label>
+                    <input type="date" id="event-date" required>
+
+                    <label for="event-time">Time:</label>
+                    <input type="time" id="event-time" required>
+
+                    <label for="event-location">Location:</label>
+                    <input type="text" id="event-location" placeholder="E.g., The Blue Lounge, 123 Party St" required>
+
+                    <label for="event-description">Description:</label>
+                    <textarea id="event-description" rows="3" placeholder="Tell us about your event..."></textarea>
+
+                    <div class="toggle-switch">
+                        <label for="event-public">Public Event</label>
+                        <input type="checkbox" id="event-public" checked>
+                        <span class="slider"></span>
+                    </div>
+
+                    <button type="submit">Create Event</button>
+                </form>
+            </section>
+
+            <!-- Browse Events Section -->
+            <section class="browse-events">
+                <h2 style="font-size: 1.4em;">Upcoming Events</h2>
+                <div class="event-card">
+                    <h3>Techno Tuesday</h3>
+                    <p style="color: #c0c0c0;">Date: Nov 21, 2023 | Time: 9:00 PM</p>
+                    <p style="color: #c0c0c0;">Location: The Underground Club</p>
+                    <p style="color: #c0c0c0;">Attendees: 45 | Status: Public</p>
+                    <div class="card-actions">
+                        <button onclick="alert('Joined Techno Tuesday!');">Join Event</button>
+                        <button onclick="alert('Viewing Techno Tuesday details...');">Details</button>
+                    </div>
+                </div>
+                <div class="event-card">
+                    <h3>Karaoke Night @ Purple Bar</h3>
+                    <p style="color: #c0c0c0;">Date: Nov 24, 2023 | Time: 8:00 PM</p>
+                    <p style="color: #c0c0c0;">Location: Purple Bar & Grill</p>
+                    <p style="color: #c0c0c0;">Attendees: 12 | Status: Public</p>
+                    <div class="card-actions">
+                        <button onclick="alert('Joined Karaoke Night!');">Join Event</button>
+                        <button onclick="alert('Viewing Karaoke Night details...');">Details</button>
+                    </div>
+                </div>
+            </section>
+        </div>
+
+        <!--
+        * USER PROFILE PAGE
+        * View and edit user information.
+        -->
+        <div id="profile-page" class="page container">
+            <h1>My Profile</h1>
+
+            <!-- Profile Display View -->
+            <section id="profile-display" class="active" style="text-align: center;">
+                <img src="https://via.placeholder.com/150/8A2BE2/FFFFFF?text=Lapo" alt="Profile Picture of Lapo McKnee" style="width: 150px; height: 150px; border-radius: 50%; object-fit: cover; margin-bottom: 20px; border: 3px solid #00ffff;">
+                <h2>Lapo McKnee</h2>
+                <p style="color: #c0c0c0;"><strong>Email:</strong> testing-gmail26@aol.com</p>
+                <p style="color: #c0c0c0;"><strong>Bio:</strong> Nightlife enthusiast, always looking for the next great party and the best late-night food. Love meeting new people!</p>
+                <p style="color: #c0c0c0;"><strong>Interests:</strong> Live Music, Dancing, Craft Cocktails, Foodie Adventures, Socializing.</p>
+                <button onclick="showProfileEdit();">Edit Profile</button>
+            </section>
+
+            <!-- Profile Edit View (initially hidden) -->
+            <section id="profile-edit">
+                <h2>Edit Profile</h2>
+                <form onsubmit="saveProfile(); return false;">
+                    <label for="edit-name">Name:</label>
+                    <input type="text" id="edit-name" value="Lapo McKnee" required>
+
+                    <label for="edit-email">Email:</label>
+                    <input type="email" id="edit-email" value="testing-gmail26@aol.com" required>
+
+                    <label for="edit-bio">Bio:</label>
+                    <textarea id="edit-bio" rows="4">Nightlife enthusiast, always looking for the next great party and the best late-night food. Love meeting new people!</textarea>
+
+                    <label for="edit-interests">Interests (comma-separated):</label>
+                    <input type="text" id="edit-interests" value="Live Music, Dancing, Craft Cocktails, Foodie Adventures, Socializing">
+
+                    <button type="submit">Save Changes</button>
+                    <button type="button" onclick="cancelProfileEdit();" style="background-color: #5a0362;">Cancel</button>
+                </form>
+            </section>
+        </div>
+
+        <!--
+        * SETTINGS AND PREFERENCES PAGE
+        * Application settings and user preferences.
+        -->
+        <div id="settings-page" class="page container">
+            <h1>Settings & Preferences</h1>
+
+            <!-- Account Settings Section -->
+            <section class="account-settings" style="margin-bottom: 30px;">
+                <h2>Account</h2>
+                <button onclick="alert('Change password feature not implemented.');">Change Password</button>
+                <button onclick="alert('Privacy settings feature not implemented.');">Privacy Settings</button>
+                <div class="toggle-switch">
+                    <label for="notifications-toggle">Push Notifications</label>
+                    <input type="checkbox" id="notifications-toggle" checked>
+                    <span class="slider"></span>
+                </div>
+            </section>
+
+            <!-- App Preferences Section -->
+            <section class="app-preferences" style="margin-bottom: 30px;">
+                <h2>App Preferences</h2>
+                <div class="toggle-switch">
+                    <label for="dark-mode-toggle">Dark Mode</label>
+                    <input type="checkbox" id="dark-mode-toggle" checked>
+                    <span class="slider"></span>
+                </div>
+                <div class="toggle-switch">
+                    <label for="location-services-toggle">Location Services</label>
+                    <input type="checkbox" id="location-services-toggle" checked>
+                    <span class="slider"></span>
+                </div>
+                <label for="search-radius">Search Radius (miles):</label>
+                <input type="range" id="search-radius" min="1" max="50" value="10">
+                <span id="search-radius-value" style="display: block; text-align: right; color: #c0c0c0;">10 miles</span>
+            </section>
+
+            <!-- Danger Zone Section -->
+            <section class="danger-zone">
+                <h2>Danger Zone</h2>
+                <button onclick="alert('Logging out...'); window.location.reload();" style="background-color: #ff00ff;">Logout</button>
+                <button onclick="if(confirm('Are you sure you want to delete your account? This cannot be undone.')) alert('Account deleted.');" style="background-color: #dc3545;">Delete Account</button>
+            </section>
+        </div>
+
+        <!--
+        * BOTTOM NAVIGATION BAR
+        * Consistent navigation across most application screens.
+        -->
+        <nav class="navbar">
+            <a href="#" data-page="dashboard-page" class="nav-item">Dashboard</a>
+            <a href="#" data-page="people-page" class="nav-item">People</a>
+            <a href="#" data-page="restaurants-page" class="nav-item">Restaurants</a>
+            <a href="#" data-page="chat-page" class="nav-item">Chat</a>
+            <a href="#" data-page="events-page" class="nav-item">Events</a>
+            <a href="#" data-page="profile-page" class="nav-item">Profile</a>
+            <a href="#" data-page="settings-page" class="nav-item">Settings</a>
+        </nav>
+    </div>
+
+    <script>
+        /*
+        * JavaScript for Single Page Application (SPA) navigation and interactions.
+        * Manages page visibility and basic UI toggles.
+        */
+
+        // --- SPA Navigation Logic ---
+        document.addEventListener('DOMContentLoaded', () => {
+            const navLinks = document.querySelectorAll('.navbar a');
+            const pages = document.querySelectorAll('.page');
+            const homePage = document.getElementById('home-page');
+
+            // Function to show a specific page and hide others
+            function showPage(pageId) {
+                pages.forEach(page => {
+                    page.classList.remove('active');
+                });
+                document.getElementById(pageId).classList.add('active');
+
+                // Update active class for nav items
+                navLinks.forEach(link => {
+                    if (link.dataset.page === pageId) {
+                        link.classList.add('active-nav');
+                    } else {
+                        link.classList.remove('active-nav');
+                    }
+                });
+
+                // Hide nav bar on home/login-signup pages
+                const navbar = document.querySelector('.navbar');
+                if (pageId === 'home-page' || pageId === 'login-signup-page') {
+                    navbar.style.display = 'none';
+                } else {
+                    navbar.style.display = 'flex';
+                }
+
+                // Scroll to top of the page
+                window.scrollTo(0, 0);
+            }
+
+            // Event listeners for navigation links
+            navLinks.forEach(link => {
+                link.addEventListener('click', (e) => {
+                    e.preventDefault(); // Prevent default anchor behavior
+                    const targetPage = e.currentTarget.dataset.page;
+                    showPage(targetPage);
+                });
+            });
+
+            // Event listeners for internal button-links (e.g., from home to dashboard)
+            document.querySelectorAll('.button-link[data-page]').forEach(link => {
+                link.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    const targetPage = e.currentTarget.dataset.page;
+                    showPage(targetPage);
+                });
+            });
+
+            // Set initial active page (Home Page)
+            showPage('home-page');
+        });
+
+        // --- Login/Signup Page Specific Logic ---
+        function showSection(sectionId) {
+            document.getElementById('login-section').style.display = 'none';
+            document.getElementById('signup-section').style.display = 'none';
+            document.getElementById(sectionId).style.display = 'block';
+        }
+        function hideSection(sectionId) {
+            document.getElementById(sectionId).style.display = 'none';
+        }
+
+        // --- Profile Page Specific Logic ---
+        function showProfileEdit() {
+            document.getElementById('profile-display').classList.remove('active');
+            document.getElementById('profile-edit').classList.add('active');
+
+            // Populate edit fields with current display values (simulated)
+            document.getElementById('edit-name').value = "Lapo McKnee";
+            document.getElementById('edit-email').value = "testing-gmail26@aol.com";
+            document.getElementById('edit-bio').value = "Nightlife enthusiast, always looking for the next great party and the best late-night food. Love meeting new people!";
+            document.getElementById('edit-interests').value = "Live Music, Dancing, Craft Cocktails, Foodie Adventures, Socializing";
+        }
+
+        function saveProfile() {
+            // In a real app, this would send data to a backend
+            alert('Profile saved! (Changes not persistent in prototype)');
+            document.getElementById('profile-display').classList.add('active');
+            document.getElementById('profile-edit').classList.remove('active');
+            // Update display values if needed (for prototype, keeping static)
+        }
+
+        function cancelProfileEdit() {
+            document.getElementById('profile-display').classList.add('active');
+            document.getElementById('profile-edit').classList.remove('active');
+        }
+
+        // --- Chat Page Specific Logic ---
+        let currentChatPartner = '';
+
+        function showSingleChat(partnerName) {
+            currentChatPartner = partnerName;
+            document.getElementById('chat-partner-name').textContent = partnerName;
+            document.getElementById('chat-threads-view').classList.remove('active');
+            document.getElementById('single-chat-view').classList.add('active');
+            // Scroll chat to bottom
+            const messageList = document.getElementById('message-list');
+            messageList.scrollTop = messageList.scrollHeight;
+        }
+
+        function hideSingleChat() {
+            currentChatPartner = '';
+            document.getElementById('single-chat-view').classList.remove('active');
+            document.getElementById('chat-threads-view').classList.add('active');
+        }
+
+        function sendMessage() {
+            const input = document.getElementById('chat-message-input');
+            const message = input.value.trim();
+            if (message) {
+                const messageList = document.getElementById('message-list');
+                const newMessageDiv = document.createElement('div');
+                newMessageDiv.classList.add('message', 'sent');
+                newMessageDiv.textContent = message;
+                messageList.appendChild(newMessageDiv);
+                input.value = ''; // Clear input
+
+                // Simulate a response after a short delay
+                setTimeout(() => {
+                    const responseDiv = document.createElement('div');
+                    responseDiv.classList.add('message', 'received');
+                    responseDiv.textContent = `Got it, ${currentChatPartner}! (Simulated reply)`;
+                    messageList.appendChild(responseDiv);
+                    messageList.scrollTop = messageList.scrollHeight; // Scroll to new message
+                }, 1000);
+
+                messageList.scrollTop = messageList.scrollHeight; // Scroll to new message
+            }
+        }
+
+        // --- Settings Page Specific Logic ---
+        document.addEventListener('DOMContentLoaded', () => {
+            // Update age range value display
+            const ageRangeInput = document.getElementById('age-range');
+            const ageRangeValueSpan = document.getElementById('age-range-value');
+            if (ageRangeInput && ageRangeValueSpan) {
+                ageRangeValueSpan.textContent = `18 - ${ageRangeInput.value} years`;
+                ageRangeInput.addEventListener('input', () => {
+                    ageRangeValueSpan.textContent = `18 - ${ageRangeInput.value} years`;
+                });
+            }
+
+            // Update rating filter value display
+            const ratingFilterInput = document.getElementById('rating-filter');
+            const ratingFilterValueSpan = document.getElementById('rating-filter-value');
+            if (ratingFilterInput && ratingFilterValueSpan) {
+                ratingFilterValueSpan.textContent = `${ratingFilterInput.value} Stars & Up`;
+                ratingFilterInput.addEventListener('input', () => {
+                    ratingFilterValueSpan.textContent = `${ratingFilterInput.value} Stars & Up`;
+                });
+            }
+
+            // Update search radius value display
+            const searchRadiusInput = document.getElementById('search-radius');
+            const searchRadiusValueSpan = document.getElementById('search-radius-value');
+            if (searchRadiusInput && searchRadiusValueSpan) {
+                searchRadiusValueSpan.textContent = `${searchRadiusInput.value} miles`;
+                searchRadiusInput.addEventListener('input', () => {
+                    searchRadiusValueSpan.textContent = `${searchRadiusInput.value} miles`;
+                });
+            }
+
+            // Dark Mode Toggle (Client-side only, for prototype styling)
+            const darkModeToggle = document.getElementById('dark-mode-toggle');
+            if (darkModeToggle) {
+                darkModeToggle.addEventListener('change', () => {
+                    if (darkModeToggle.checked) {
+                        document.body.style.backgroundColor = '#1a011d';
+                        document.documentElement.style.setProperty('--bg-dark', '#1a011d');
+                        document.documentElement.style.setProperty('--bg-content', '#2b022f');
+                    } else {
+                        // A simple "light" mode for prototype
+                        document.body.style.backgroundColor = '#f0f0f0';
+                        document.body.style.color = '#333';
+                        document.documentElement.style.setProperty('--bg-dark', '#f0f0f0');
+                        document.documentElement.style.setProperty('--bg-content', '#ffffff');
+                        document.querySelectorAll('h1, h2, h3').forEach(el => el.style.color = '#333');
+                        document.querySelectorAll('button, .button-link, .nav-button').forEach(el => el.style.backgroundColor = '#666');
+                        document.querySelectorAll('button:hover, .button-link:hover, .nav-button:hover').forEach(el => el.style.backgroundColor = '#888');
+                        document.querySelectorAll('input, textarea, select').forEach(el => {
+                            el.style.backgroundColor = '#eee';
+                            el.style.color = '#333';
+                            el.style.borderColor = '#bbb';
+                        });
+                        document.querySelectorAll('label').forEach(el => el.style.color = '#555');
+                        document.querySelectorAll('a').forEach(el => el.style.color = '#007bff');
+                        document.querySelectorAll('.navbar').forEach(el => {
+                            el.style.backgroundColor = '#e0e0e0';
+                            el.style.borderTopColor = '#bbb';
+                        });
+                        document.querySelectorAll('.navbar a').forEach(el => el.style.color = '#555');
+                        document.querySelectorAll('.navbar a.active-nav').forEach(el => el.style.color = '#007bff');
+                        document.querySelectorAll('.navbar a:hover').forEach(el => el.style.backgroundColor = '#d0d0d0');
+                        document.querySelectorAll('.profile-card, .restaurant-card, .event-card, .chat-thread').forEach(el => el.style.backgroundColor = '#ffffff');
+                        document.querySelectorAll('.map-placeholder').forEach(el => {
+                            el.style.backgroundColor = '#e0e0e0';
+                            el.style.borderColor = '#bbb';
+                            el.style.color = '#555';
+                        });
+                        document.querySelectorAll('.chat-messages').forEach(el => el.style.backgroundColor = '#e0e0e0');
+                        document.querySelectorAll('.message.sent').forEach(el => el.style.backgroundColor = '#007bff');
+                        document.querySelectorAll('.message.received').forEach(el => el.style.backgroundColor = '#cccccc');
+                        document.querySelectorAll('.toggle-switch .slider').forEach(el => el.style.backgroundColor = '#bbb');
+                        document.querySelectorAll('input[type="range"]::-webkit-slider-thumb').forEach(el => el.style.backgroundColor = '#007bff');
+                        document.querySelectorAll('input[type="range"]::-moz-range-thumb').forEach(el => el.style.backgroundColor = '#007bff');
+                        document.querySelectorAll('input[type="range"]').forEach(el => el.style.backgroundColor = '#ccc');
+                    }
+                });
+            }
+        });
+    </script>
+</body>
+</html>
+```
